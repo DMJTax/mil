@@ -1,0 +1,160 @@
+Multiple Instance Learning Matlab toolbox. (version 1.2.1)
+
+This toolbox is an add-on to the PRTools toolbox. The toolbox contains
+algorithms to train, investigate, visualize and evaluate multiple
+instance learning classifiers. Realize that this toolbox is quite
+preliminary still, because I am still not sure if the structure and
+the coding choices that I made are sensible. But the code works:-)
+
+Graphical representation how to get from a collection of bags of
+instances, to a label per bag:
+
+          +------------------------- std.cl. --- Nx2 --- milcombine
+MIL dataset                                                |
+(instances) -- milvector -- Bxp'---- std.cl ------------ dataset
+  Nxp      --- milproxm --- BxB -- kernel.cl ------------ Bx2   
+                                                           | 
+          +------------------------- mil.cl ---------------+
+
+N: total nr of objects    p: dimensionality
+B: number of bags
+
+There are three 'extra' converter MIL tools:
+milcombine : combine the outputs by a standard classifier on the individual
+             instances
+           shortcut: simple_mil(w) = w*milcombine
+milvector  : compute a feature vector from a bag of instances
+           shortcut: vector_mil(w) = milvector*w
+milproxm   : compute (dis)similarities between bags
+           shortcut: sv_mil(w) = svc(x,milproxm)
+
+
+To get the most out of this toolbox, some experience with the PRTools
+toolbox is recommended.  This toolbox is developed as a research tool so
+no guarantees can be given.
+
+- Requirements:
+
+In order to make this toolbox work, you need:
+0. A computer and some enthusiasm
+1. PRTools 5.1.0 or higher
+2. DD_tools, for dd_auc and dd_message
+3. This toolbox.
+
+- Installation:
+
+The installation of the toolbox is almost trivial. Unzip the file, store
+the contents in a directory (name it for instance MIL) and add this
+directory to your matlab path.
+
+- Information and example code:
+
+For the most basic information, type  help MIL (use the directory
+name where the toolbox is stored). Some simple example is given in
+tstmusk.m.
+
+* Notes on version 1.2.1
+- Removed a bug in milproxm
+- Put the code in github
+
+* Notes on version 1.2
+- Use the new standard way of Prtools to define mappings (using
+  mapping_task)
+
+* Notes on version 1.0.0
+- All functions are standarized according to the Prtools5.1 standards
+- Better help for all functions
+
+* Notes on version 0.9.0
+- All mappings and datasets are updated to work with Prtools 5.0. This
+  is NOT backward compatible!
+- Added the milesvector.m, that implements a separate mapping to compute
+  a MILES like representation
+- Make sure that in positive_class.m only *exact* class names are
+  matched.
+- Add a function to make a scatterplot for a MIL dataset
+- Added a separate milesproxm, that computes the bag similarity
+  representation as it is used in MILES
+- Added a sparse logistic classifier: sparseloglc.m, using the SLEP
+  optimization toolbox. Pretty efficient!
+- Added MIL_EX1.m, an example file to show how to train a
+  miles-classifier
+
+* Notes on version 0.8.1
+- Added bag2instlab.m, to copy bag labels to instance labels
+- Made a new specializing MIL: incrementally specializing MIL, where we
+  focus more and more on the most positive instances in the positive
+  bags. To avoid confusion, the incmil.m is now renamed to incsvddmil.m
+- Added the gendatmilr.m and gendatmilw.m to construct artificial MIL
+  problems for which all instances are informative. The distributions of
+  the positive and negative instances differ only slightly. It is
+  slightly wider or slightly rotated.
+- Extended the gendatmil, such that more bags can be sampled than there
+  are in a MIL dataset. When more bags are requested, a bootstrap sample
+  is created.
+- Make sure that you can apply genmil to a dataset on which you already 
+  did a genmil. So genmil(genmil(x)) is allowed.
+- Simplified simple_mil, to disallow retraining on parts of the data
+  (beause that is done in spec_mil)  
+- Small updates on traindecstump.m, to make it a tiny bit more robust.
+
+* Notes on version 0.8.0
+- Fixed an important problem in milproxm.m: define the mapping such that
+  no batch processing is done (that confuses the map.m procedure from
+  prtools).
+  Later also for all other mappings this is changed.
+- Added the mynormcdf for apr_expand
+- Added getbaglab.m for easier access to the bag labels
+- Made bagsizes a bit more flexible, and allow also cell arrays as
+  input.
+- Added splitseq2mil, that generates a MIL dataset from sequence data by
+  splitting the sequence in subsequences.
+- Added the 'correct' (cough) implementation of milboostc.m
+- Added the pposterior_mil.m classifier
+- Added the milmerge.m to merge two MIL datasets (without screwing up
+  the bags)
+- Added spec2_mil, a reimplementation of spec_mil, as it was originally
+  intended to be (after it got confused with misvm).
+- Changed the call of misvm.m, such that also a fraction of instances
+  may cause a bag to be labeled positive (instead of just a single one,
+  as was the default)
+- Fixed typos and small bugs.
+
+* Notes on version 0.7.9
+- Upgraded getbags to allow for non-MIL labeled datasets (ie datasets
+  that do not have 'positive' or 'negative' as label).
+  Also, some sneaky bug was removed.
+- Added the Incremental SVDD MIL
+- Fixed the Earth movers distance, so that the total weight adds up to
+  1.
+- The feature 'number of instances in a bag' is moved from milproxm.m to
+  milvector.m
+- Enormous speedup of the EMD in milproxm.m
+
+* Notes on version 0.7.8
+- Fixed the milvector.m. It is now a trained mapping, instead of a fixed
+  one. It also introduced a mountain of other problems (giving a
+  cell-array as an imput parameter caused problems for prtools, so that
+  is changed as well).
+- Removed the combineobjects.m 
+- Extended this README
+- Added getwnames.m to make the example work, and removed a bug there.
+- Renamed nrbags to nrfolds in the tstmusk.
+- Fixed the computation of the operating point in the milroc.
+- Added the weighted logistic regression, and the boosting_mil (still
+  needs some debugging and optimizion I think...)
+- Added the miSVM.
+- Added the Earth Mover's distance to milproxm
+- Redefined mil_kernel and milproxm. All the work is now being done by
+  milproxm, and mil_kernel is now just a call to milproxm.
+- Fixed a bug in the bias of the miles.m
+- Added the function to get the size of each bag: getsizes.m
+- Renamed mil_kernel into milkernel
+- Added the linear assignment distance
+- Fixed a terrible bug in bagsizes.m
+- Complete rewrite of the function sv_mil.
+- Fixed many small bugs...
+
+* Notes on version 0.7.7
+- Added this README
+- Put this on the webpage
