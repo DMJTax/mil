@@ -150,9 +150,17 @@ else
 			end
 			classlab = cell2mat(newlab);
 		end
-		for i=1:length(x)
-			baglab{i,1} = repmat(i,size(x{i},1),1);
-		end
+      if isempty(baglab)
+         for i=1:length(x)
+            baglab{i,1} = repmat(i,size(x{i},1),1);
+         end
+      else
+         orgbaglab = baglab;
+         baglab = cell(length(x),1);
+         for i=1:length(x)
+            baglab{i,1} = repmat(orgbaglab(i,:),size(x{i},1),1);
+         end
+      end
 		x = cell2mat(x);
 		baglab = cell2mat(baglab);
 	end

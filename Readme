@@ -53,6 +53,9 @@ For the most basic information, type  help MIL (use the directory
 name where the toolbox is stored). Some simple example is given in
 tstmusk.m.
 
+* Notes on version 1.2.2
+- Added the subsampling of bags
+
 * Notes on version 1.2.1
 - Removed a bug in milproxm
 - Put the code in github

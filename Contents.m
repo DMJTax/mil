@@ -1,5 +1,5 @@
 %Multi-instance Learning Toolbox
-%Version 1.2.1  19-Sep-2016
+%Version 1.2.2  26-Apr-2017
 %
 %Dataset operations
 %------------------
@@ -17,6 +17,7 @@
 %positive_class   Define classes the positive class
 %milrandomize     Randomize the order of the bags in a MIL set
 %milmerge         Merge two MIL datasets into one
+%subsample_bags   Randomly subsample instances from bags
 %
 %unmil            Remove the MIL bags
 %milfile2set      Convert MIL datafile to dataset
