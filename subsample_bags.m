@@ -5,7 +5,10 @@
 % Randomly subsample a fraction FRAC of the instances from bags in A,
 % and store it in B. The number of bags should not change.
 
-function b = subsample_bags(a,frac)
+function b = subsample_bags(a,frac,seed)
+if nargin<3
+   seed = [];
+end
 if nargin<2
    frac = 0.5;
 end
@@ -20,6 +23,9 @@ N = length(bag);
 % subsample:
 for i=1:N
    n = size(bag{i},1);
+   if ~isempty(seed)
+      rng(seed);
+   end
    I = randperm(n);
    f = ceil(frac*n);
    bag{i} = bag{i}(I(1:f),:);
