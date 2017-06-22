@@ -15,6 +15,7 @@
 % store it in Y. The following features are defined:
 %   RTYPE:             DOES:       
 %    'm'        mean per bag  (default)
+%    's'        sum per bag
 %    'e'        extreme (min and max) values per feature per bag
 %    'c'        covariance matrix elements
 %    'n'        number of instances per bag
@@ -77,6 +78,8 @@ elseif mapping_task(argin,'training')
 		switch rtype
 		case 'm'
 			pnew = p;
+		case 's'
+			pnew = p;
 		case 'e'
 			pnew = 2*p;
 		case 'u'
@@ -123,6 +126,17 @@ elseif mapping_task(argin,'trained execution')  %testing
 			fl = [repmat('mean ',p,1) num2str(oldfl)];
 		else
 			fl = cellprintf('mean %d',1:p);
+		end
+	case 's'   % the sum vector of a bag
+		y = zeros(n,p);
+		for i=1:n
+			y(i,:) = sum(bags{i},1);
+		end
+		oldfl = getfeatlab(x);
+		if ~isempty(oldfl)
+			fl = [repmat('sum ',p,1) num2str(oldfl)];
+		else
+			fl = cellprintf('sum %d',1:p);
 		end
 	case 'e'  % the min and max values of a bag
 		y = zeros(n,2*p);
