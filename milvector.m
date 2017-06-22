@@ -208,6 +208,8 @@ else
 	switch rtype
 	case 'm'
 		name = 'mean-inst';
+	case 's'
+		name = 'sum-inst';
 	case 'e'
 		name = 'extremes';
 	case 'u'
